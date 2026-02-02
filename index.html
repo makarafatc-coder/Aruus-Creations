@@ -9,225 +9,293 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050010; color: white; overflow-x: hidden; scroll-behavior: smooth; }
         
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #050010; 
-            color: white; 
-            overflow-x: hidden; 
-            scroll-behavior: smooth; 
+        .glass-bg-layer { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .info-panel-glass { background: rgba(255, 255, 255, 0.05) !important; backdrop-filter: blur(35px) !important; border-left: 1px solid rgba(255, 255, 255, 0.1) !important; }
+        
+        /* --- EPIC HERO UPDATES --- */
+        .hero-main { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        
+        .animated-gradient-bg {
+            position: absolute; width: 150%; height: 150%;
+            background: radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.1) 0%, rgba(139, 92, 246, 0.05) 25%, transparent 50%);
+            animation: rotateBg 20s linear infinite; z-index: -1;
         }
+        @keyframes rotateBg { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* Glass Utility Classes */
-        .glass-bg-layer { 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
+        .hero-title { font-size: clamp(3rem, 15vw, 10rem); line-height: 0.85; letter-spacing: -0.05em; font-weight: 900; }
+        
+        .floating-avatar {
+            position: relative; transition: transform 0.3s ease-out;
+            animation: floatY 5s ease-in-out infinite;
         }
+        @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-        /* Modal-er daine diker Glass Effect (Specific Mark kora area) */
-        .info-panel-glass { 
-            background: rgba(255, 255, 255, 0.05) !important; 
-            backdrop-filter: blur(35px) !important; 
-            -webkit-backdrop-filter: blur(35px) !important; 
-            border-left: 1px solid rgba(255, 255, 255, 0.1) !important; 
+        .scanline {
+            width: 100%; height: 2px; background: rgba(217, 70, 239, 0.3);
+            position: absolute; top: 0; left: 0; animation: scan 4s linear infinite; z-index: 10;
         }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
-        .bg-vibe { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
-            background: radial-gradient(circle at 50% 50%, #0a0020 0%, #050010 100%); 
+        .scroll-indicator {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            width: 2px; height: 60px; background: linear-gradient(to bottom, #d946ef, transparent);
+            animation: scrollLine 2s infinite;
         }
+        @keyframes scrollLine { 0% { transform: translateX(-50%) scaleY(0); transform-origin: top; } 50% { transform: translateX(-50%) scaleY(1); transform-origin: top; } 50.1% { transform: translateX(-50%) scaleY(1); transform-origin: bottom; } 100% { transform: translateX(-50%) scaleY(0); transform-origin: bottom; } }
+        /* -------------------------- */
 
-        .gradient-text { 
-            background: linear-gradient(90deg, #d946ef, #8b5cf6, #d946ef); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            background-size: 200%; 
-            animation: shine 3s linear infinite; 
-        }
-        @keyframes shine { to { background-position: 200%; } }
-
+        .grid-overlay { position: absolute; inset: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(circle at center, black, transparent 80%); z-index: -1; }
+        .gradient-text { background: linear-gradient(90deg, #d946ef, #8b5cf6, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200%; animation: shine 3s linear infinite; }
+        @keyframes shine { to { background-position: 200% center; } }
+        
         .filter-btn { transition: 0.3s; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
         .filter-btn.active { background: #d946ef; border-color: #d946ef; box-shadow: 0 0 20px rgba(217,70,239,0.3); }
-        
-        /* Star Animation */
-        .sparkle-star { background: white; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+        .hidden-custom { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div class="bg-vibe"></div>
-    <audio id="vibeMusic" loop src="https://p.scdn.co/mp3-preview/38749a2157a9f77f0d0c36746813470dae3b6801"></audio>
-
     <nav class="fixed w-full z-50 p-6 flex justify-between items-center bg-[#050010]/60 backdrop-blur-xl border-b border-white/5">
-        <div class="text-2xl font-black uppercase tracking-tighter">ARUUS<span class="text-fuchsia-500">.</span></div>
-        <button id="musicToggle" onclick="toggleMusic()" class="glass-bg-layer px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest text-fuchsia-400 flex items-center gap-2 hover:scale-105 transition">
+        <div class="text-2xl font-black uppercase tracking-tighter">ARAFAT<span class="text-fuchsia-500">.</span></div>
+        <button id="musicToggle" onclick="toggleMusic()" class="glass-bg-layer px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest text-fuchsia-400 flex items-center gap-2">
             <i data-lucide="play" class="w-3 h-3"></i> <span>Play Vibe</span>
         </button>
     </nav>
 
-    <section class="min-h-screen flex flex-col justify-center items-center text-center px-6">
-        <div class="relative mb-10">
-            <div class="w-48 h-48 md:w-56 md:h-56 rounded-full p-1 bg-gradient-to-tr from-fuchsia-500 to-violet-600 overflow-hidden shadow-2xl" data-aos="zoom-in">
-                <img src="Untitled-1.png" class="w-full h-full object-cover rounded-full border-4 border-[#050010]">
-            </div>
-        </div>
-        <h1 class="text-5xl md:text-9xl font-black mb-4 uppercase tracking-tighter" data-aos="fade-up">ARAFAT <span class="gradient-text">CREATIONS</span></h1>
-        <p class="text-gray-400 italic text-lg max-w-lg" data-aos="fade-up">Elite Visual Storyteller & Brand Designer.</p>
-    </section>
-
-    <section id="work" class="py-24 container mx-auto px-6">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-            <h2 class="text-4xl font-black uppercase border-b-4 border-fuchsia-500 inline-block">My Work_</h2>
-            <div class="flex flex-wrap gap-3">
-                <button class="filter-btn active px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest" onclick="filterWork('all', this)">All</button>
-                <button class="filter-btn px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest" onclick="filterWork('poster', this)">Posters</button>
-                <button class="filter-btn px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest" onclick="filterWork('social', this)">Social Media</button>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10" id="workGrid">
-            <div class="work-item social glass-bg-layer p-6 rounded-[3rem] group cursor-pointer" onclick="openModal('Social Media Poster', 'Premium visual design for high engagement.', 'Artboard 2.png')">
-                <div class="h-80 overflow-hidden rounded-[2rem] bg-black/40 relative">
-                    <img src="Artboard 2.png" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+    <section class="hero-main">
+    <div class="animated-gradient-bg"></div>
+    <div class="grid-overlay"></div>
+    <div class="scanline"></div>
+    
+    <div class="container mx-auto px-6 flex flex-col items-center relative z-20">
+        <div class="flex flex-col items-center mb-10" data-aos="zoom-in">
+            <div class="floating-avatar">
+                <div class="w-44 h-44 md:w-56 md:h-56 rounded-full p-1 bg-gradient-to-tr from-fuchsia-500 via-violet-600 to-cyan-400 shadow-[0_0_60px_rgba(217,70,239,0.25)]">
+                    <img src="Untitled-1.png" class="w-full h-full object-cover rounded-full border-[6px] border-[#050010]">
                 </div>
             </div>
-            <div class="work-item poster glass-bg-layer p-6 rounded-[3rem] group cursor-pointer" onclick="openModal('Thumbnail Design', 'Optimized for the highest CTR.', 'thumbnail design.png')">
-                <div class="h-80 overflow-hidden rounded-[2rem] bg-black/40 relative">
-                    <img src="thumbnail design.png" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                </div>
-            </div>
-            <div class="work-item social glass-bg-layer p-6 rounded-[3rem] group cursor-pointer" onclick="openModal('Character Design', 'Exclusive brand visual storytelling.', 'chiki binte mahmud.png')">
-                <div class="h-80 overflow-hidden rounded-[2rem] bg-black/40 relative">
-                    <img src="chiki binte mahmud.png" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                </div>
-            </div>
-
-            <div class="work-item extra-item hidden poster glass-bg-layer p-6 rounded-[3rem] cursor-pointer" onclick="openModal('Coming Soon', 'New creative work is on the way.', 'updating soon.png')">
-                <div class="h-80 overflow-hidden rounded-[2rem] bg-black/40 opacity-50"><img src="updating soon.png" class="w-full h-full object-cover"></div>
-            </div>
-            <div class="work-item extra-item hidden social glass-bg-layer p-6 rounded-[3rem] cursor-pointer" onclick="openModal('Coming Soon', 'Stay tuned for updates.', 'updating soon.png')">
-                <div class="h-80 overflow-hidden rounded-[2rem] bg-black/40 opacity-50"><img src="updating soon.png" class="w-full h-full object-cover"></div>
-            </div>
-            <div class="work-item extra-item hidden poster glass-bg-layer p-6 rounded-[3rem] cursor-pointer" onclick="openModal('Coming Soon', 'Portfolio is expanding.', 'updating soon.png')">
-                <div class="h-80 overflow-hidden rounded-[2rem] bg-black/40 opacity-50"><img src="updating soon.png" class="w-full h-full object-cover"></div>
+            
+            <div class="mt-6 bg-fuchsia-600 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(217,70,239,0.4)] border border-white/20">
+                Available for Projects
             </div>
         </div>
 
-        <div class="text-center mt-16">
-            <button id="seeMoreBtn" onclick="toggleExtraItems()" class="px-12 py-5 glass-bg-layer rounded-full text-[11px] font-black uppercase tracking-[0.2em] hover:bg-fuchsia-600 transition duration-300">
-                See More Projects
-            </button>
-        </div>
-    </section>
-
-    <div id="projectModal" onclick="closeModal()" style="display: none; position: fixed; inset: 0; z-index: 100; background: rgba(5, 0, 16, 0.9); backdrop-filter: blur(10px); align-items: center; justify-content: center; padding: 20px;">
-        <div class="max-w-[1100px] w-full bg-[#0a0020] border border-white/10 rounded-[40px] overflow-hidden flex flex-col md:flex-row relative" onclick="event.stopPropagation()">
-            <button class="absolute top-6 right-6 text-white bg-white/10 p-3 rounded-full z-20 hover:bg-fuchsia-600 transition" onclick="closeModal()"><i data-lucide="x"></i></button>
-            <div class="md:w-2/3 bg-black/30 flex items-center justify-center p-6">
-                <img id="modalImg" src="" class="max-h-[75vh] w-auto rounded-xl shadow-2xl">
-            </div>
-            <div class="md:w-1/3 p-10 flex flex-col justify-center info-panel-glass">
-                <h2 id="modalTitle" class="text-3xl font-black uppercase mb-6 text-fuchsia-500 leading-tight"></h2>
-                <p id="modalDesc" class="text-gray-300 text-lg leading-relaxed mb-8"></p>
-                <div class="space-y-4">
-                    <div class="flex items-center gap-3 text-[10px] font-bold uppercase text-white/40">
-                        <i data-lucide="shield-check" class="text-fuchsia-500 w-4 h-4"></i> Premium Quality
-                    </div>
+        <div class="text-center">
+            <h2 class="text-fuchsia-500 font-bold tracking-[0.6em] text-[10px] uppercase mb-6" data-aos="fade-down">Visual Identity & Motion Designer</h2>
+            <h1 class="hero-title uppercase" data-aos="fade-up">
+                ARAFAT<br>
+                <span class="gradient-text">CREATIONS</span>
+            </h1>
+            
+            <div class="mt-10 flex flex-col md:flex-row items-center justify-center gap-8" data-aos="fade-up" data-aos-delay="200">
+                <p class="text-gray-400 text-sm md:text-lg max-w-md leading-relaxed italic">
+                    Crafting <span class="text-white font-bold not-italic">Premium Brand Experiences</span> through high-end digital artistry.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#work" class="px-10 py-4 bg-fuchsia-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full hover:scale-110 hover:shadow-[0_0_30px_rgba(217,70,239,0.4)] transition-all duration-300">My Work</a>
+                    <a href="#contact" class="px-10 py-4 glass-bg-layer text-white text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-white hover:text-black transition-all duration-300">Hire Me</a>
                 </div>
             </div>
         </div>
     </div>
 
-   <section id="contact" class="py-24 container mx-auto px-6 border-t border-white/5">
+    <div class="scroll-indicator"></div>
+</section>
+
+    <section id="work" class="py-24 container mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <h2 class="text-4xl font-black uppercase border-b-4 border-fuchsia-500 inline-block">My Work_</h2>
+            <div class="flex flex-wrap gap-3">
+                <button class="filter-btn active px-6 py-2 rounded-full text-[10px] font-bold uppercase" onclick="filterWork('all', this)">All</button>
+                <button class="filter-btn px-6 py-2 rounded-full text-[10px] font-bold uppercase" onclick="filterWork('poster', this)">Thumbnails</button>
+                <button class="filter-btn px-6 py-2 rounded-full text-[10px] font-bold uppercase" onclick="filterWork('social', this)">Social Media</button>
+                <button class="filter-btn px-6 py-2 rounded-full text-[10px] font-bold uppercase" onclick="filterWork('logo', this)">Logo Design</button>
+                <button class="filter-btn px-6 py-2 rounded-full text-[10px] font-bold uppercase" onclick="filterWork('thumbnail', this)">Card and Banners</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10" id="workGrid">
+            <script>
+                const projects = [
+                    { cat: 'social', title: 'Social media Poster', desc: 'Elite design for brand growth.', img: 'Artboard 2.png' },
+                    { cat: 'poster', title: 'Thumbnail', desc: 'High impact creative visual.', img: 'thumbnail design.png' },
+                    { cat: 'social', title: 'Character Design', desc: 'Custom unique assets.', img: 'chiki binte mahmud.png' },
+                    { cat: 'poster', title: 'Tech Thumbnail', desc: 'Creative branding poster design.', img: 'azim.png' },
+                    { cat: 'poster', title: 'Eye Catching', desc: 'Custom high-quality thumbnail.', img: 'Thumbnail For Rabeya.png' },
+                    { cat: 'logo', title: 'Logo Design', desc: 'Modern brand identity design.', img: 'fenir jagoron logo final.jpg' },
+                    { cat: 'thumbnail', title: 'ID Card Design', desc: 'Professional ID card design.', img: 'study tour id card03.png' }
+                ];
+
+                const placeholders = [
+                    { cat: 'thumbnail', title: 'Banner', desc: 'Work in progress...', img: 'study tour.pnggggg.png' },
+                    { cat: 'social', title: 'Social Post', desc: 'Work in progress...', img: 'updating soon.png' },
+                    { cat: 'logo', title: 'Logo Vibe', desc: 'Work in progress...', img: 'updating soon.png' },
+                    { cat: 'poster', title: 'Thumbnail', desc: 'Work in progress...', img: 'updating soon.png' }
+                ];
+                const allItems = [...projects, ...placeholders];
+                document.write(allItems.map((p, index) => {
+                    const isHidden = index >= 6 ? 'hidden-custom' : '';
+                    return `
+                    <div class="work-item ${p.cat} ${isHidden} glass-bg-layer p-3 rounded-[2.5rem] group cursor-pointer transition-all duration-500 hover:-translate-y-2" onclick="openModal('${p.title}', '${p.desc}', '${p.img}')">
+                        <div class="relative aspect-square overflow-hidden rounded-[2rem] bg-[#0a0020] flex items-center justify-center border border-white/5">
+                            <img src="${p.img}" class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-20 scale-150">
+                            <img src="${p.img}" class="relative z-10 max-w-[85%] max-h-[85%] object-contain transform group-hover:scale-110 transition-transform duration-700 shadow-2xl">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#050010] via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8 z-20">
+                                <p class="text-[10px] font-bold uppercase text-fuchsia-500 tracking-[0.3em] mb-4">${p.cat}</p>
+                                <h3 class="text-xl font-black uppercase text-white tracking-tighter">${p.title}</h3>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join(''));
+            </script>
+        </div>
+
+        <div class="text-center mt-16" id="seeMoreContainer">
+            <button id="seeMoreBtn" onclick="toggleSeeMore()" class="px-10 py-4 glass-bg-layer rounded-full text-[11px] font-black uppercase tracking-[0.2em] hover:bg-fuchsia-600 transition duration-300">See More Projects</button>
+        </div>
+    </section> 
+
+    <section id="reviews" class="py-24 bg-white/5 border-y border-white/5 relative overflow-hidden">
+        <div class="hero-glow" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.1;"></div>
+        <div class="container mx-auto px-6 text-center mb-16" data-aos="fade-up">
+            <h2 class="text-4xl md:text-5xl font-black uppercase tracking-tighter">CLIENT <span class="text-fuchsia-500">VOICES_</span></h2>
+            <div class="grid md:grid-cols-3 gap-8 mt-12">
+                <div class="glass-bg-layer p-8 rounded-[2.5rem] relative text-left">
+                    <i data-lucide="quote" class="w-8 h-8 text-fuchsia-500 mb-6 opacity-50"></i>
+                    <p class="text-gray-300 italic mb-8">"Arafat is a visionary. The thumbnails he designed increased our CTR by 40%. Absolutely elite work!"</p>
+                    <h4 class="font-bold text-white uppercase text-xs tracking-widest">James D.</h4>
+                </div>
+                <div class="glass-bg-layer p-8 rounded-[2.5rem] relative text-left border-fuchsia-500/30 border">
+                    <i data-lucide="quote" class="w-8 h-8 text-fuchsia-500 mb-6 opacity-50"></i>
+                    <p class="text-gray-300 italic mb-8">"The brand identity he created is beyond expectations. Professional, fast, and creative."</p>
+                    <h4 class="font-bold text-white uppercase text-xs tracking-widest">Sarah Ahmed</h4>
+                </div>
+                <div class="glass-bg-layer p-8 rounded-[2.5rem] relative text-left">
+                    <i data-lucide="quote" class="w-8 h-8 text-fuchsia-500 mb-6 opacity-50"></i>
+                    <p class="text-gray-300 italic mb-8">"Working with Aruus Creations was a game changer for our social media presence. Highly recommended!"</p>
+                    <h4 class="font-bold text-white uppercase text-xs tracking-widest">Mike Ross</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 container mx-auto px-6 border-t border-white/5">
     <div class="grid md:grid-cols-2 gap-16">
         <div data-aos="fade-right">
             <h2 class="text-6xl font-black mb-4 uppercase tracking-tighter">LET'S <br><span class="text-fuchsia-500">WORK.</span></h2>
+            <p class="text-gray-400 mb-8 max-w-sm leading-relaxed">Got a vision that needs a creative touch? I’m here to turn your ideas into elite visuals. <span class="text-white font-bold italic">Drop me a message!</span></p>
             
-            <p class="text-gray-400 mb-8 max-w-sm leading-relaxed">
-                Got a vision that needs a creative touch? I’m here to turn your ideas into elite visuals. 
-                <span class="text-white font-bold italic">Drop me a message and let's create something extraordinary together!</span>
-            </p>
-
-            <div class="space-y-4 mb-10">
-                <div class="flex items-center gap-4">
-                    <i data-lucide="mail" class="text-fuchsia-500 w-5 h-5"></i>
-                    <p class="text-sm font-bold uppercase tracking-widest">949arafathossain@gmail.com</p>
+            <div class="space-y-4 mb-10 text-sm font-bold uppercase tracking-widest">
+                <div class="flex items-center gap-4 group">
+                    <div class="w-10 h-10 glass-bg-layer rounded-xl flex items-center justify-center group-hover:bg-fuchsia-500 transition duration-300">
+                        <i data-lucide="mail" class="text-fuchsia-400 group-hover:text-white w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-[10px]">Official Email</p>
+                        <p class="text-white tracking-normal">949arafathossain@gmail.com</p>
+                    </div>
                 </div>
             </div>
-            
+
             <div class="flex flex-wrap gap-4">
-                <a href="https://www.facebook.com/arafatttt30949" target="_blank" class="w-14 h-14 glass-bg-layer rounded-2xl flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition duration-300">
-                    <i data-lucide="facebook"></i>
+                <a href="https://www.facebook.com/arafatttt30949" target="_blank" class="w-14 h-14 glass-bg-layer rounded-2xl flex items-center justify-center hover:bg-[#1877F2] hover:scale-110 transition duration-300">
+                    <i class="fa-brands fa-facebook-f text-xl text-white"></i>
                 </a>
-                <a href="https://www.instagram.com/arafat_h_2.0?igsh=MTd0d3gxaTcyem14eg==" target="_blank" class="w-14 h-14 glass-bg-layer rounded-2xl flex items-center justify-center hover:bg-gradient-to-tr from-pink-500 to-yellow-500 hover:scale-110 transition duration-300">
-                    <i data-lucide="instagram"></i>
+                <a href="https://www.instagram.com/arafat_h_2.0?igsh=MTd0d3gxaTcyem14eg==" target="_blank" class="w-14 h-14 glass-bg-layer rounded-2xl flex items-center justify-center hover:bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] hover:scale-110 transition duration-300">
+                    <i class="fa-brands fa-instagram text-xl text-white"></i>
                 </a>
-                <a href="https://www.behance.net/gamingarafat1" target="_blank" class="w-14 h-14 glass-bg-layer rounded-2xl flex items-center justify-center hover:bg-blue-500 hover:scale-110 transition duration-300">
-                    <i data-lucide="external-link"></i>
+                <a href="https://www.behance.net/gamingarafat1" target="_blank" class="w-14 h-14 glass-bg-layer rounded-2xl flex items-center justify-center hover:bg-[#0057ff] hover:scale-110 transition duration-300">
+                    <i class="fa-brands fa-behance text-2xl text-white"></i>
                 </a>
-                <a href="https://wa.me/8801883730949" target="_blank" class="w-14 h-14 glass-bg-layer rounded-2xl flex items-center justify-center hover:bg-green-600 hover:scale-110 transition duration-300">
-                    <i data-lucide="message-circle"></i>
+                <a href="https://wa.me/8801883730949" target="_blank" class="w-14 h-14 glass-bg-layer rounded-2xl flex items-center justify-center hover:bg-[#25D366] hover:scale-110 transition duration-300">
+                    <i class="fa-brands fa-whatsapp text-xl text-white"></i>
+                </a>
+                <a href="https://www.fiverr.com/arafat_hossain" target="_blank" class="w-14 h-14 glass-bg-layer rounded-2xl flex items-center justify-center hover:bg-[#1dbf73] hover:scale-110 transition duration-300">
+                    <img src="https://cdn.worldvectorlogo.com/logos/fiverr-1.svg" class="w-7 h-7 brightness-0 invert" alt="Fiverr">
+                </a>
+                <a href="#" target="_blank" class="w-14 h-14 glass-bg-layer rounded-2xl flex items-center justify-center hover:bg-[#14a800] hover:scale-110 transition duration-300">
+                    <i class="fa-brands fa-upwork text-2xl text-white"></i>
                 </a>
             </div>
         </div>
 
         <div class="glass-bg-layer p-10 rounded-[3rem]" data-aos="fade-left">
             <form class="space-y-4">
-                <input type="text" placeholder="Your Name" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-fuchsia-500 transition">
-                <input type="email" placeholder="Your Email" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-fuchsia-500 transition">
-                <textarea placeholder="Tell me about your project..." rows="3" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-fuchsia-500 transition"></textarea>
-                <button type="button" class="w-full py-5 bg-fuchsia-600 rounded-2xl font-black uppercase text-xs tracking-widest hover:scale-[1.02] transition">Send Message</button>
+                <div class="relative">
+                    <input type="text" placeholder="Your Name" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-fuchsia-500 transition text-white">
+                </div>
+                <div class="relative">
+                    <input type="email" placeholder="Your Email Address" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-fuchsia-500 transition text-white">
+                </div>
+                <div class="relative">
+                    <textarea placeholder="Tell me about your project..." rows="3" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl outline-none focus:border-fuchsia-500 transition text-white"></textarea>
+                </div>
+                <button type="button" class="w-full py-5 bg-fuchsia-600 rounded-2xl font-black uppercase text-xs tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition shadow-lg shadow-fuchsia-600/20">
+                    Send Message
+                </button>
             </form>
         </div>
     </div>
-    <footer class="mt-24 text-center text-gray-800 text-[9px] uppercase tracking-[0.5em]">© 2026 ARUUS CREATIONS. ALL RIGHTS RESERVED.</footer>
+    <footer class="mt-24 text-center text-gray-800 text-[9px] uppercase tracking-[0.5em]">© 2026 ARUUS CREATIONS.</footer>
 </section>
+
+    <div id="projectModal" onclick="closeModal()" style="display: none; position: fixed; inset: 0; z-index: 100; background: rgba(5, 0, 16, 0.9); backdrop-filter: blur(10px); align-items: center; justify-content: center; padding: 20px;">
+        <div class="max-w-[1100px] w-full bg-[#0a0020] border border-white/10 rounded-[40px] overflow-hidden flex flex-col md:flex-row relative" onclick="event.stopPropagation()">
+            <button class="absolute top-6 right-6 text-white bg-white/10 p-3 rounded-full z-20" onclick="closeModal()"><i data-lucide="x"></i></button>
+            <div class="md:w-2/3 p-6 flex items-center justify-center"><img id="modalImg" src="" class="max-h-[75vh] rounded-xl"></div>
+            <div class="md:w-1/3 p-10 info-panel-glass flex flex-col justify-center">
+                <h2 id="modalTitle" class="text-3xl font-black uppercase text-fuchsia-500 mb-4"></h2>
+                <p id="modalDesc" class="text-gray-300"></p>
+            </div>
+        </div>
+    </div>
 
     <script>
         lucide.createIcons();
         AOS.init({ duration: 1000, once: true });
-
+        
         const music = document.getElementById('vibeMusic');
         function toggleMusic() {
             const btn = document.getElementById('musicToggle');
-            if (music.paused) { 
-                music.play(); 
-                btn.innerHTML = `<i data-lucide="pause" class="w-3 h-3"></i> <span>Pause Vibe</span>`; 
-            } else { 
-                music.pause(); 
-                btn.innerHTML = `<i data-lucide="play" class="w-3 h-3"></i> <span>Play Vibe</span>`; 
-            }
+            if (music.paused) { music.play(); btn.innerHTML = `<i data-lucide="pause" class="w-3 h-3"></i> <span>Pause Vibe</span>`; }
+            else { music.pause(); btn.innerHTML = `<i data-lucide="play" class="w-3 h-3"></i> <span>Play Vibe</span>`; }
             lucide.createIcons();
         }
 
+        let showingAll = false;
         function filterWork(category, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            document.querySelectorAll('.work-item').forEach(item => {
-                if (category === 'all' || item.classList.contains(category)) {
-                    item.classList.remove('hidden');
-                } else {
-                    item.classList.add('hidden');
-                }
+            const items = document.querySelectorAll('.work-item');
+            const seeMoreContainer = document.getElementById('seeMoreContainer');
+            if (seeMoreContainer) seeMoreContainer.style.display = (category === 'all') ? 'block' : 'none';
+            items.forEach((item, index) => {
+                const matches = (category === 'all' || item.classList.contains(category));
+                if (matches) {
+                    item.style.display = 'block';
+                    if (category === 'all' && !showingAll && index >= 6) item.classList.add('hidden-custom');
+                    else item.classList.remove('hidden-custom');
+                } else { item.style.display = 'none'; }
             });
+            AOS.refresh();
         }
 
-        function toggleExtraItems() {
-            const extraItems = document.querySelectorAll('.extra-item');
+        function toggleSeeMore() {
+            showingAll = !showingAll;
             const btn = document.getElementById('seeMoreBtn');
-            const isHidden = extraItems[0].classList.contains('hidden');
-
-            extraItems.forEach(item => {
-                if (isHidden) item.classList.remove('hidden');
-                else item.classList.add('hidden');
+            const items = document.querySelectorAll('.work-item');
+            items.forEach((item, index) => {
+                if (showingAll) item.classList.remove('hidden-custom');
+                else if (index >= 6) item.classList.add('hidden-custom');
             });
-
-            btn.innerText = isHidden ? "See Less Projects" : "See More Projects";
+            btn.innerText = showingAll ? "See Less Projects" : "See More Projects";
             AOS.refresh();
         }
 
@@ -237,6 +305,7 @@
             document.getElementById('modalImg').src = imgSrc;
             document.getElementById('projectModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
+            lucide.createIcons();
         }
 
         function closeModal() {
