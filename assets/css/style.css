@@ -1251,3 +1251,56 @@ body:has(.hero) .site-header::after {
   .fi-3 { bottom: 18%; left: -4%; }
   .fi-4 { bottom: 18%; right: -4%; }
 }
+
+/* =========================================================
+   HEADER FIX — লোগো, টেক্সট, হ্যামবার্গার অ্যালাইনমেন্ট
+   ========================================================= */
+
+.header-inner {
+  height: 68px;
+  align-items: center;
+}
+
+.logo {
+  align-items: center;
+  line-height: 1;
+  gap: 12px;
+}
+
+.logo-mark {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 0;
+}
+
+.logo-text {
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: .08em;
+}
+
+.nav-toggle {
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0;
+  display: none;
+}
+
+.nav-toggle span {
+  width: 18px;
+  height: 2px;
+  margin: 0;
+}
+
+@media (max-width: 960px) {
+  .nav-toggle { display: inline-flex; }
+}
